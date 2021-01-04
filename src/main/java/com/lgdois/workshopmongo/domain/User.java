@@ -2,9 +2,20 @@ package com.lgdois.workshopmongo.domain;
 
 import java.io.Serializable;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+//Aqui no Spring para esta classe User corresponder a uma coleção lá do mongodb, que no nosso caso é a coleção "user",
+//é só colocar aqui na classe de dominio a annotation @Document , vc pode opcionalmente abrir um parentese e colocar
+//collection = "o nome da coleção do banco de dados" que no nosso caso é "user", se vc n colocar, o Spring Data vai
+//mapear a coleção com o nome da classe só que tudo com letras minusculas então se vc colocar somente @Document tb
+//funciona, além disso em cima do atributo que for a chave vc vai colocar a annotation @Id.
+
+@Document(collection="user")
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	@Id
 	private String id;
 	private String name;
 	private String email;
@@ -67,7 +78,4 @@ public class User implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
-
 }
