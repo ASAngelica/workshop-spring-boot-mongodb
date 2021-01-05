@@ -1,6 +1,7 @@
 package com.lgdois.workshopmongo.resources;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lgdois.workshopmongo.domain.User;
+import com.lgdois.workshopmongo.dto.UserDTO;
 import com.lgdois.workshopmongo.services.UserService;
 
 //Esta classe é um recurso Rest, portanto vamos colocar annotation " @RestController na classe"
@@ -49,9 +51,24 @@ public class UserResource {
 	//já com possíveis cabeçalhos, possíveis erros etc...
 	
 	@RequestMapping(method=RequestMethod.GET) // pode ser usado tb "@GetMapping" ...
-	public ResponseEntity<List<User>> findAll(){
-		List<User> list = service.findAll();
-		return ResponseEntity.ok(list); //para retornar o método vamos ter que instanciar o obj ResponseEntity.ok(budy), ok é o método
+	public ResponseEntity<List<UserDTO>> findAll(){
+		List<User> list = service.findAll();// no meu serviço carrego uma lista de User;
+		
+		// Converter a lista de User para uma listDTO, 
+        // declaramos uma lista de UserDTO e essa
+        // list vai receber a conversão de cada elemento da lista original para listDTO. 
+        // Essa converção se dará através de uma expressão lambda, vamos colocar list.stream() para
+        // tramsformar em uma stream que é uma coleção compativel com as expressões lambda 
+        // e  vamos chamar o método .map(), esse método vai pegar cada objeto .map(x ) na minha lista 
+        // original , esse x pode ser um nome que vc quiser, e para cada objeto desse que vai ser 
+        // um User, vamos retornar um new UserDTO passando esse x como argumento 
+        // .map(x -> new UserDTO(x), para finalizar eu tenho que voltar este stream para uma lista
+		// inserindo o .collect() e depois eu vou colocar o .collect(Collectors.tolist()) pronto
+		// com uma linha apenas eu consigo converter cada objeto da minha lista original para um DTO.	
+		List<UserDTO> listDTO = list.stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
+			
+	
+		return ResponseEntity.ok(listDTO);//para retornar o método vamos ter que instanciar o obj ResponseEntity.ok(budy), ok é o método
 		// que vai instanciar o ResponseEntity já com o código de resposta http informando que a resposta ocorreu com sucesso e budy para 
 		//definir qual vai ser o corpo da resposta, vamos colocar a palavrinha list como budy, ou seja no corpo da minha resposta vai ter 
 		//esta lista que montamos no método.
