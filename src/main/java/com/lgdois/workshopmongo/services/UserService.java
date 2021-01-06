@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lgdois.workshopmongo.domain.User;
+import com.lgdois.workshopmongo.dto.UserDTO;
 import com.lgdois.workshopmongo.repository.UserRepository;
 import com.lgdois.workshopmongo.services.exception.ObjectNotFoundException;
 
@@ -38,4 +39,20 @@ public class UserService {
 		Optional<User> obj = repo.findById(id);
 	 	return obj.orElseThrow(()-> new ObjectNotFoundException("Objeto não encontrado"));
 		}
+	
+	public User insert(User obj) {
+		return repo.insert(obj);
+	}
+	
+	//Implementar o método fromDTO, é um método que vai pegar um DTO e instanciar um usuario, é um caminho inverso que fizemos na classe DTO,
+	//no UserDTO temos o construtor que ele pega um User e instancia o UserDTO, agora vamos fazer o contrario, vou querer que o UserDTO instancie
+	//um User a partir dele, neste caso tem uma polêmica, a sugestão é implementar o fromDTO dentro do UserService, e não do UserDTO, cabe um questionamento
+	//de Violação do Principio de Responsabilidade Unica, se é para pegar um UserDTO e gerar um User, não seria adequado colocar também lá na classe UserDTO?
+	//sim pode até ser, mas pq que queremos colocar no UserService? é pq dependendo da situação, para instanciar um User eu posso querer acessar o banco de dados
+	//e quem já tem a dependencia para o banco de dados é o User service (private UserRepository repo;) então para ficar uma operação que seja possível fazer 
+	//uma operação no futuro que possa ter uma acesso a dados, vamos colocar no UserService, é por esse motivo.
+	
+	public User fromDTO(UserDTO objDto) {
+		return new User(objDto.getId(), objDto.getName(), objDto.getEmail());
+	}
 }

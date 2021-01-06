@@ -1,17 +1,17 @@
 package com.lgdois.workshopmongo.resources;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.server.handler.ResponseStatusExceptionHandler;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.lgdois.workshopmongo.domain.User;
 import com.lgdois.workshopmongo.dto.UserDTO;
@@ -83,6 +83,50 @@ public class UserResource {
 		User obj = service.findById(id);
 		
 		return ResponseEntity.ok().body(new UserDTO(obj));
-		
 	}
+	
+	@RequestMapping(method=RequestMethod.POST) // se preferir pode apagar @RequestMapping(ethod=RequestMethod.POST)  é só colocar a annotation @PostMapping
+	public ResponseEntity<Void> insert(@RequestBody UserDTO objDto){ //esse endpoint vai receber como argumento um UserDTO, vou dar o nome objDto, para que esse endpoint aceit
+		                                                             //esse objeto, eu tenho que colocar a annotation @RequestBody .
+		User obj = service.fromDTO(objDto); // coverter esse DTO para User fazendo assim , service.fromDTO(objDto) recebendo um objeto DTO como argumento.
+		                                    // com isso eu converti um obj DTO para User. Agora eu vou chamar o insert passando um obj como argumento.
+		
+		obj = service.insert(obj);
+		
+		// Inseriu no banco de dados, eu vou retornar uma resposta vazia porem nesta resposta, eu vou colocar um cabeçalho com a url do novo recurso criado
+		// isso é uma boa pratica pra fazer isso eu vou copiar um codigo especifico do spring que faz exatamente isso.
+		
+		//Para fazer isso eu vou ter instanciar um objeto do tip uri e fazer essa chamada enorme a seguir passando o obj.getId() como argumento isso vai pegar
+		//o end do novo objeto que eu inseri
+		
+		
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+		return ResponseEntity.created(uri).build();// aqui eu vou chavar o ResponseEntity.created(), o método created() retorna o codigo 201 que é o código de resposta http quando
+		                                           // se cria um novo recurso e ai eu vou passar esse caminho como argumento, esse comando vai me retornar uma resposta vazia com
+		                                           // o codigo 201 e com o cabeçalho contendo a localização do novo recurso criado.
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
