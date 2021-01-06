@@ -5,9 +5,13 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.server.handler.ResponseStatusExceptionHandler;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.lgdois.workshopmongo.domain.User;
 import com.lgdois.workshopmongo.dto.UserDTO;
@@ -65,13 +69,20 @@ public class UserResource {
         // .map(x -> new UserDTO(x), para finalizar eu tenho que voltar este stream para uma lista
 		// inserindo o .collect() e depois eu vou colocar o .collect(Collectors.tolist()) pronto
 		// com uma linha apenas eu consigo converter cada objeto da minha lista original para um DTO.	
-		List<UserDTO> listDTO = list.stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
+		List<UserDTO> listDto = list.stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
 			
 	
-		return ResponseEntity.ok(listDTO);//para retornar o método vamos ter que instanciar o obj ResponseEntity.ok(budy), ok é o método
+		return ResponseEntity.ok().body(listDto);//para retornar o método vamos ter que instanciar o obj ResponseEntity.ok(budy), ok é o método
 		// que vai instanciar o ResponseEntity já com o código de resposta http informando que a resposta ocorreu com sucesso e budy para 
-		//definir qual vai ser o corpo da resposta, vamos colocar a palavrinha list como budy, ou seja no corpo da minha resposta vai ter 
+		//definir qual vai ser o corpo da resposta, vamos colocar a palavrinha list como body, ou seja no corpo da minha resposta vai ter 
 		//esta lista que montamos no método.
 	}
-
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.GET)         //Para o argumento id passado pelo método findById casar com o id  
+	public ResponseEntity<UserDTO> findById(@PathVariable String id){//passado na url(value="/{id}"), incluimos a annotation @PathVariable.
+		User obj = service.findById(id);
+		
+		return ResponseEntity.ok().body(new UserDTO(obj));
+		
+	}
 }

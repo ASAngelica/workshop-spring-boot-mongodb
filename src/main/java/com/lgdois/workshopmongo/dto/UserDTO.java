@@ -3,16 +3,6 @@ package com.lgdois.workshopmongo.dto;
 import java.io.Serializable;
 
 import com.lgdois.workshopmongo.domain.User;
-/*
-DTO (Data Transfer Object): é um objeto que tem o papel de carregar dados das entidades de forma simples,
-podendo inclusive "projetar" apenas alguns dados da entidade original. Vantagens:
-- Otimizar o tráfego (trafegando menos dados)
-- Evitar que dados de interesse exclusivo do sistema fiquem sendo expostos (por exemplo: senhas, dados de
-auditoria como data de criação e data de atualização do objeto, etc.)
-- Customizar os objetos trafegados conforme a necessidade de cada requisição (por exemplo: para alterar
-um produto, você precisa dos dados A, B e C; já para listar os produtos, eu preciso dos dados A, B e a
-categoria de cada produto, etc.). 
-*/
 
 public class UserDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
@@ -28,6 +18,7 @@ public class UserDTO implements Serializable{
 	//uma forma automatizada de instanciar um UserDTO a partir de um User. Usando o método get recuperamos os dados
 	//do User ex: id = obj.getId();
 	public UserDTO(User obj) {
+		super();
 		id = obj.getId();
 		name = obj.getName();
 		email = obj.getEmail();

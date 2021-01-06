@@ -1,12 +1,14 @@
 package com.lgdois.workshopmongo.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lgdois.workshopmongo.domain.User;
 import com.lgdois.workshopmongo.repository.UserRepository;
+import com.lgdois.workshopmongo.services.exception.ObjectNotFoundException;
 
 // Em primeiro lugar para eu falar para o Spring que esta classe vai ser um serviço que possa ser injetável em
 // outras classes, eu tenho que colocar a annotation @Service.
@@ -24,7 +26,7 @@ public class UserService {
 	@Autowired
 	private UserRepository repo;
 	
-	@Autowired
+	
 	public List<User> findAll(){
 		
 		return repo.findAll(); //dentre o tanto de operações que já vem pronta no repository do Spring Data, tem inclusive
@@ -32,6 +34,8 @@ public class UserService {
 		                       //do tipo User.
 	}
 	
-	
-
+	public User findById(String id) {
+		Optional<User> obj = repo.findById(id);
+	 	return obj.orElseThrow(()-> new ObjectNotFoundException("Objeto não encontrado"));
+		}
 }

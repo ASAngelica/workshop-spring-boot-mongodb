@@ -1,7 +1,4 @@
 package com.lgdois.workshopmongo.config;
-
-
-
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
