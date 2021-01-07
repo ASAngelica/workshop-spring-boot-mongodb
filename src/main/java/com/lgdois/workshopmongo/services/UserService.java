@@ -44,6 +44,11 @@ public class UserService {
 		return repo.insert(obj);
 	}
 	
+    public void delete(String id) {
+    	findById(id); //a chamada do método findById é para tratar a Exceção.
+    	repo.deleteById(id);
+    }
+	
 	//Implementar o método fromDTO, é um método que vai pegar um DTO e instanciar um usuario, é um caminho inverso que fizemos na classe DTO,
 	//no UserDTO temos o construtor que ele pega um User e instancia o UserDTO, agora vamos fazer o contrario, vou querer que o UserDTO instancie
 	//um User a partir dele, neste caso tem uma polêmica, a sugestão é implementar o fromDTO dentro do UserService, e não do UserDTO, cabe um questionamento

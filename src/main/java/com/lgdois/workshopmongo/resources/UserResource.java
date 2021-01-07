@@ -106,27 +106,12 @@ public class UserResource {
 		                                           // o codigo 201 e com o cabeçalho contendo a localização do novo recurso criado.
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)         //Para o argumento id passado pelo método casar com o id  
+	public ResponseEntity<Void> delete(@PathVariable String id){//passado na url(value="/{id}"), incluimos a annotation @PathVariable.
+		service.delete(id);
+		
+		return ResponseEntity.noContent().build();//Como não tem que retornar nada, será uma resposta com o codigo 204, no ResponseEntity 
+		                                          //o código 204 é o noContent() com  chamar o metodo .build();
+	}
 	
 }
