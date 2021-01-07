@@ -57,7 +57,29 @@ public class UserService {
 	//e quem já tem a dependencia para o banco de dados é o User service (private UserRepository repo;) então para ficar uma operação que seja possível fazer 
 	//uma operação no futuro que possa ter uma acesso a dados, vamos colocar no UserService, é por esse motivo.
 	
-	public User fromDTO(UserDTO objDto) {
+	
+    
+    
+	// Um detalhe importante, esse objeto que vai vir como argumento vai ser os dados que o usuario enviar na requisição, esses dados não tem nenhum vinculo
+	// com o banco de dados, para atualizar a gente que fazer o seguinte, eu vou buscar o objeto original que esta no banco de dados alterar este objeto com
+	// os dados enviado na requisição, e aí eu salvo este objeto que eu busquei. O primeiro passo é instanciar um objeto User, vou dar o nome de newObj, vai ser
+	// o objeto que eu vou atualizar, esse objeto eu vou buscar do banco de dados então eu vou chamar repo.findById( ??? ) - > qual vai ser o id que eu vou usar
+	// como argumento para encontrar esse objeto? vai ser o id que veio no obj passado como parametro, ou seja obj.getId(), então o newObj é um objeto original
+	// la do banco de dados , agora eu tenho que pegar os dados que eu enviei aqui no obj e atualizar o meu newObj e depois eu salvo, então eu vou criar um metodo
+	// updateData() e eu vou passar para esse metodo o newObj e o obj, esse metodo vai ser o responsavel para copiar os novos dados que estão aqui no obj para newObj,
+	public User update(User obj) {
+		User newObj = findById(obj.getId());
+		updateData(newObj, obj);
+		return repo.save(newObj);
+		}
+	
+	//qual deve ser a logica para copiar os dados que estao no obj para o newObj? depende de objeto para objeto e do seu negocio tambem, aqui no caso é muito simples.
+	private void updateData(User newObj, User obj) {
+		newObj.setName(obj.getName());
+		newObj.setEmail(obj.getEmail());
+	}
+	
+    public User fromDTO(UserDTO objDto) {
 		return new User(objDto.getId(), objDto.getName(), objDto.getEmail());
 	}
 }
