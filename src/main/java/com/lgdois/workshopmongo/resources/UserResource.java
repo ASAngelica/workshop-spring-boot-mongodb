@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.lgdois.workshopmongo.domain.Post;
 import com.lgdois.workshopmongo.domain.User;
 import com.lgdois.workshopmongo.dto.UserDTO;
 import com.lgdois.workshopmongo.services.UserService;
@@ -126,9 +127,13 @@ public class UserResource {
 	}
 	
 	
-	
-	
-	
+	//Nós criamos a referencia para os posts de um usuário, agora nós vamos criar o endpoint para retornar os posts de um usuário
+	//para fazer isso vamos implementar esse endpoint
+	@RequestMapping(value="/{id}/posts", method=RequestMethod.GET)         //Para o argumento id passado pelo método findById casar com o id  
+	public ResponseEntity<List<Post>> findPosts(@PathVariable String id){//passado na url(value="/{id}"), incluimos a annotation @PathVariable.
+		User obj = service.findById(id);
+		return ResponseEntity.ok().body(obj.getPosts());
+	}
 	
 	
 	
