@@ -1,5 +1,7 @@
 package com.lgdois.workshopmongo.repository;
 
+import java.util.List;
+
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -7,6 +9,20 @@ import com.lgdois.workshopmongo.domain.Post;
 
 @Repository
 public interface PostRepository extends MongoRepository<Post, String> {
+	
+	//Consulta simples com query methods
+	//Referências:
+		//https://docs.spring.io/spring-data/mongodb/docs/current/reference/html/
+		//https://docs.spring.io/spring-data/data-document/docs/current/reference/html/
+	
+	//São metodos especiais que o spring data oferece para ele gerar automaticamente as consultas, eu coloquei acima duas referências
+	//principais, a primeira é a referencia oficial do spring data para o MongoDB que contem os query methods com varias formas de vc
+	//definir consultas escrevendo o nome do metodo para dessa forma o spring data gerar automaticamente a consulta.
+	
+	//Esse metodo vai retornar uma lista de Post e qual vai ser o nome do método? findBy obedecendo o padrão do spring, qual é o
+	//atributo que queremos buscar? title, e na frente vamos colocar a palavra Containing e entao o metodo vai receber uma String text
+	//como argumento, o IgnoraCase é para ignorar minuscula ou maiusculas.
+	List<Post> findByTitleContainingIgnoreCase(String text);
 
 }
 
