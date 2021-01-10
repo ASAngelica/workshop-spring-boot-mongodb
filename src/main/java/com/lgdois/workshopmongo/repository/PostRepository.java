@@ -3,12 +3,25 @@ package com.lgdois.workshopmongo.repository;
 import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.lgdois.workshopmongo.domain.Post;
 
 @Repository
 public interface PostRepository extends MongoRepository<Post, String> {
+	
+	//vamos fazer a mesma consulta que fizemos abaixo com o query methods, só que agora eu vou especificar a consulta do MondoDB manualmente
+	//usando o string Json, vamos então fazer a implementação alternativa da consulta, neste caso agora eu dou o nome do metodo que eu quiser
+	//já que esse método agora vai ser personalizado, vamos usar dessa vez o annotation @Query e entre parenteses, vamos colocar o meu Json,
+	//e dentro dos parenteses vamos colocar a nossa consulta, na documentação, tem a REGEX (Expressão Regular) que vai usar,
+	//( { <field>: { $regex: /pattern/, $options: '<options>' } })com o nome do campo:,
+	//ai vai abrir um objeto regex, $regex:, a expressão, e as opções.
+	
+  //@Query({ <field>: { $regex: /pattern/, $options: '<options>' } }
+	@Query("{ 'title': { $regex: ?0, $options: 'i' } }")// 'title' é o campo do MongoDB que vamos pesquisar, ?0 é o parametro do método que vamos passar no caso 'text' e como
+	List<Post> searchTitle(String text);                // só tem um parametro acrescentamos o '0' na '?', ficando '?0", e 'i' é a opção para case insensitive.   
+	
 	
 	//Consulta simples com query methods
 	//Referências:
