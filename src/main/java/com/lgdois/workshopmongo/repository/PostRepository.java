@@ -1,5 +1,6 @@
 package com.lgdois.workshopmongo.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -20,7 +21,8 @@ public interface PostRepository extends MongoRepository<Post, String> {
 	
   //@Query({ <field>: { $regex: /pattern/, $options: '<options>' } }
 	@Query("{ 'title': { $regex: ?0, $options: 'i' } }")// 'title' é o campo do MongoDB que vamos pesquisar, ?0 é o parametro do método que vamos passar no caso 'text' e como
-	List<Post> searchTitle(String text);                // só tem um parametro acrescentamos o '0' na '?', ficando '?0", e 'i' é a opção para case insensitive.   
+	List<Post> searchTitle(String text); 
+	// só tem um parametro acrescentamos o '0' na '?', ficando '?0", e 'i' é a opção para case insensitive.   
 	
 	
 	//Consulta simples com query methods
@@ -36,6 +38,27 @@ public interface PostRepository extends MongoRepository<Post, String> {
 	//atributo que queremos buscar? title, e na frente vamos colocar a palavra Containing e entao o metodo vai receber uma String text
 	//como argumento, o IgnoraCase é para ignorar minuscula ou maiusculas.
 	List<Post> findByTitleContainingIgnoreCase(String text);
+	
+	
+	
+	/*Essa consulta abaixo vai ficar bem maior que a primeira, a primeira coisa que temos que entender, é que eu vou ter que
+	  busar o texto ou no titulo, ou no corpo ou nos comentarios, então vou ter que usar o operador "$or" do MongoDB, que 
+	  se encontra na documentação " https://docs.mongodb.com/manual/reference/operator/query/regex/", depois de fazer esse OR
+	  eu também vou ter que testar a data minima (minDate) e data máxima (maxDate), neste caso o operador logico "$and" do
+	  MongoDB, esse testo vai estar '$or' no titulo '$or' no corpo '$or' nos comentarios, e vai ter 
+	  uma data minima '$and' uma data máxima, então eu vou ter um operador $and e dentro desse $and em uma das expressões dele,
+	  vai ser uma expressão $or, para buscar o titulo nas três possibilidades:
+	  
+	   $and
+
+       Syntax: { $and: [ { <expression1> }, { <expression2> } , ... , { <expressionN> } ] }
+	  
+	  
+	  
+	*/
+	
+	@Query("{ $and: [ {date: {$gte: ?1} }, { date: { $lte: ?2} } , { $or: [ { 'title': { $regex: ?0, $options: 'i' } }, { 'body': { $regex: ?0, $options: 'i' } }, { 'comments.text': { $regex: ?0, $options: 'i' } } ] } ] } ")
+	List<Post> fullSearch(String text, Date minDate, Date maxDate);
 
 }
 
